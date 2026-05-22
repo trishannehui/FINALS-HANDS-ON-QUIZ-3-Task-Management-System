@@ -25,7 +25,12 @@ SECRET_KEY = 'django-insecure-thw5s2d1&r$!bwci=&-ok3-smx^pit@9g&_47%7a=oln4zmjj$
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['127.0.0.1', 'localhost']
+ALLOWED_HOSTS = [
+    'kinerz707.pythonanywhere.com',
+    'Kinerz707.pythonanywhere.com',
+    '127.0.0.1',
+    'localhost',
+]
 
 
 INSTALLED_APPS = [
@@ -51,6 +56,11 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+]
+
+CSRF_TRUSTED_ORIGINS = [
+    'https://kinerz707.pythonanywhere.com',
+    'https://Kinerz707.pythonanywhere.com',
 ]
 
 CORS_ALLOW_ALL_ORIGINS = True
