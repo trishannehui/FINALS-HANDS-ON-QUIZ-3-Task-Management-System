@@ -182,10 +182,16 @@ function App() {
           )}
         </div>
 
-        {/* ✅ Delete button at bottom, plain text pink */}
+        {/* ✅ Delete link at bottom, pink text */}
         <p
           onClick={deleteAllTasks}
-          style={{ color: "pink", cursor: "pointer", textAlign: "center", marginTop: "16px" }}
+          style={{
+            color: "pink",
+            cursor: "pointer",
+            textAlign: "center",
+            marginTop: "16px",
+            fontWeight: "bold"
+          }}
         >
           Delete All Tasks
         </p>
