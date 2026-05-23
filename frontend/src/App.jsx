@@ -64,12 +64,34 @@ function App() {
     }
   };
 
-  useEffect(() => {
-    fetchTasks();
-  }, []);
+  const markAsComplete = async (taskId) => {
+    try {
+      const response = await fetch(`${API_URL}${taskId}/`, {
+        method: "PATCH",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ is_completed: true }),
+      });
+
+      if (!response.ok) {
+        const errorText = await response.text();
+        throw new Error(errorText);
+      }
+
+      const updatedTask = await response.json();
+      setTasks(tasks.map((task) => (task.id === taskId ? updatedTask : task)));
+      setError("");
+    } catch (error) {
+      console.error(error);
+      setError("Task was not updated. Please check the Django API.");
+    }
+  };
 
   const pendingCount = tasks.filter((task) => !task.is_completed).length;
   const completedCount = tasks.filter((task) => task.is_completed).length;
+
+  useEffect(() => {
+    fetchTasks();
+  }, []);
 
   return (
     <div className="page">
@@ -110,7 +132,36 @@ function App() {
 
         {error && <p className="error-message">{error}</p>}
 
-        {/* Task list removed — you can add your new component here later */}
+        <div className="task-list">
+          {isLoading ? (
+            <p className="empty">Loading tasks...</p>
+          ) : tasks.length === 0 ? (
+            <p className="empty">No tasks yet. Add your first task above.</p>
+          ) : (
+            tasks.map((task) => (
+              <div className="task-item" key={task.id}>
+                <span
+                  className={
+                    task.is_completed
+                      ? "task-title completed-title"
+                      : "task-title"
+                  }
+                >
+                  {task.title}
+                </span>
+
+                {!task.is_completed && (
+                  <button
+                    className="complete-btn"
+                    onClick={() => markAsComplete(task.id)}
+                  >
+                    Mark Complete
+                  </button>
+                )}
+              </div>
+            ))
+          )}
+        </div>
       </div>
     </div>
   );
