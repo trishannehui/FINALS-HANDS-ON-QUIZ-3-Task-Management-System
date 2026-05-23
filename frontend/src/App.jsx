@@ -68,6 +68,9 @@ function App() {
     fetchTasks();
   }, []);
 
+  const pendingCount = tasks.filter((task) => !task.is_completed).length;
+  const completedCount = tasks.filter((task) => task.is_completed).length;
+
   return (
     <div className="page">
       <div className="card">
@@ -77,6 +80,21 @@ function App() {
         <p className="subtitle">
           Add, view, and complete tasks using a Django API and React frontend.
         </p>
+
+        <div className="summary">
+          <div>
+            <strong>{tasks.length}</strong>
+            <span>Total Tasks</span>
+          </div>
+          <div>
+            <strong>{pendingCount}</strong>
+            <span>Pending</span>
+          </div>
+          <div>
+            <strong>{completedCount}</strong>
+            <span>Completed</span>
+          </div>
+        </div>
 
         <form onSubmit={addTask} className="task-form">
           <input
