@@ -91,6 +91,20 @@ function App() {
     }
   };
 
+  // ✅ Delete all tasks
+  const deleteAllTasks = async () => {
+    try {
+      for (const task of tasks) {
+        await fetch(`${API_URL}${task.id}/`, { method: "DELETE" });
+      }
+      setTasks([]); // clear state
+      setError("");
+    } catch (error) {
+      console.error(error);
+      setError("Tasks were not deleted. Please check the Django API.");
+    }
+  };
+
   useEffect(() => {
     fetchTasks();
   }, []);
@@ -149,6 +163,11 @@ function App() {
             ))
           )}
         </div>
+
+        {/* ✅ Delete button at bottom */}
+        <button className="delete-btn" onClick={deleteAllTasks}>
+          Delete All Tasks
+        </button>
       </div>
     </div>
   );
