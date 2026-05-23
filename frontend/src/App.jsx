@@ -138,28 +138,19 @@ function App() {
           ) : tasks.length === 0 ? (
             <p className="empty">No tasks yet. Add your first task above.</p>
           ) : (
-            tasks.map((task) => (
-              <div className="task-item" key={task.id}>
-                <span
-                  className={
-                    task.is_completed
-                      ? "task-title completed-title"
-                      : "task-title"
-                  }
-                >
-                  {task.title}
-                </span>
-
-                {!task.is_completed && (
+            tasks
+              .filter((task) => !task.is_completed) // ✅ only show pending tasks in history
+              .map((task) => (
+                <div className="task-item" key={task.id}>
+                  <span className="task-title">{task.title}</span>
                   <button
                     className="complete-btn"
                     onClick={() => markAsComplete(task.id)}
                   >
                     Mark Complete
                   </button>
-                )}
-              </div>
-            ))
+                </div>
+              ))
           )}
         </div>
       </div>
