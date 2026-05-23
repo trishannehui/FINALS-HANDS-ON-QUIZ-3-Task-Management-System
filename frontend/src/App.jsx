@@ -86,24 +86,18 @@ function App() {
     }
   };
 
-  // ✅ New delete function
-  const deleteTask = async (taskId) => {
+  // ✅ Delete all tasks at once
+  const deleteAllTasks = async () => {
     try {
-      const response = await fetch(`${API_URL}${taskId}/`, {
-        method: "DELETE",
-      });
-
-      if (!response.ok) {
-        const errorText = await response.text();
-        throw new Error(errorText);
+      // Loop through tasks and delete each one
+      for (const task of tasks) {
+        await fetch(`${API_URL}${task.id}/`, { method: "DELETE" });
       }
-
-      // Remove task from state
-      setTasks(tasks.filter((task) => task.id !== taskId));
+      setTasks([]); // Clear state
       setError("");
     } catch (error) {
       console.error(error);
-      setError("Task was not deleted. Please check the Django API.");
+      setError("Tasks were not deleted. Please check the Django API.");
     }
   };
 
@@ -159,30 +153,41 @@ function App() {
           ) : tasks.length === 0 ? (
             <p className="empty">No tasks yet. Add your first task above.</p>
           ) : (
-            tasks
-              .filter((task) => !task.is_completed) // show only pending tasks
-              .map((task) => (
-                <div className="task-item" key={task.id}>
-                  <span className="task-title">{task.title}</span>
+            tasks.map((task) => (
+              <div className="task-item" key={task.id}>
+                <span
+                  className={
+                    task.is_completed
+                      ? "task-title completed-title"
+                      : "task-title"
+                  }
+                >
+                  {task.title}
+                </span>
+
+                {!task.is_completed && (
                   <button
                     className="complete-btn"
                     onClick={() => markAsComplete(task.id)}
                   >
                     Mark Complete
                   </button>
-                  <button
-                    className="delete-btn"
-                    onClick={() => deleteTask(task.id)}
-                  >
-                    Delete
-                  </button>
-                </div>
-              ))
+                )}
+              </div>
+            ))
           )}
         </div>
+
+        {/* ✅ Delete button at the bottom */}
+        {tasks.length > 0 && (
+          <button className="delete-btn" onClick={deleteAllTasks}>
+            Delete All Tasks
+          </button>
+        )}
       </div>
     </div>
   );
 }
 
 export default App;
+
