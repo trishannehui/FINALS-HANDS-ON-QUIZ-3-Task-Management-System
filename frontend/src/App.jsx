@@ -13,7 +13,6 @@ function App() {
   const fetchTasks = async () => {
     try {
       setIsLoading(true);
-
       const response = await fetch(API_URL);
 
       if (!response.ok) {
@@ -33,7 +32,6 @@ function App() {
 
   const addTask = async (e) => {
     e.preventDefault();
-
     const taskTitle = title.trim();
 
     if (taskTitle === "") {
@@ -43,16 +41,10 @@ function App() {
 
     try {
       setIsAdding(true);
-
       const response = await fetch(API_URL, {
         method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          title: taskTitle,
-          is_completed: false,
-        }),
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ title: taskTitle, is_completed: false }),
       });
 
       if (!response.ok) {
@@ -61,7 +53,6 @@ function App() {
       }
 
       const newTask = await response.json();
-
       setTasks([newTask, ...tasks]);
       setTitle("");
       setError("");
@@ -73,41 +64,6 @@ function App() {
     }
   };
 
-  const markAsComplete = async (taskId) => {
-    try {
-      const response = await fetch(`${API_URL}${taskId}/`, {
-        method: "PATCH",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          is_completed: true,
-        }),
-      });
-
-      if (!response.ok) {
-        const errorText = await response.text();
-        throw new Error(errorText);
-      }
-
-      const updatedTask = await response.json();
-
-      setTasks(
-        tasks.map((task) =>
-          task.id === taskId ? updatedTask : task
-        )
-      );
-
-      setError("");
-    } catch (error) {
-      console.error(error);
-      setError("Task was not updated. Please check the Django API.");
-    }
-  };
-
-  const pendingCount = tasks.filter((task) => !task.is_completed).length;
-  const completedCount = tasks.filter((task) => task.is_completed).length;
-
   useEffect(() => {
     fetchTasks();
   }, []);
@@ -118,27 +74,9 @@ function App() {
         <div className="badge">Django REST Framework + ReactJS</div>
 
         <h1>Task Management System</h1>
-
         <p className="subtitle">
           Add, view, and complete tasks using a Django API and React frontend.
         </p>
-
-        <div className="summary">
-          <div>
-            <strong>{tasks.length}</strong>
-            <span>Total Tasks</span>
-          </div>
-
-          <div>
-            <strong>{pendingCount}</strong>
-            <span>Pending</span>
-          </div>
-
-          <div>
-            <strong>{completedCount}</strong>
-            <span>Completed</span>
-          </div>
-        </div>
 
         <form onSubmit={addTask} className="task-form">
           <input
@@ -147,7 +85,6 @@ function App() {
             value={title}
             onChange={(e) => setTitle(e.target.value)}
           />
-
           <button type="submit" disabled={isAdding}>
             {isAdding ? "Adding..." : "Add Task"}
           </button>
@@ -155,38 +92,7 @@ function App() {
 
         {error && <p className="error-message">{error}</p>}
 
-        <div className="task-list">
-          {isLoading ? (
-            <p className="empty">Loading tasks...</p>
-          ) : tasks.length === 0 ? (
-            <p className="empty">No tasks yet. Add your first task above.</p>
-          ) : (
-            tasks.map((task) => (
-              <div className="task-item" key={task.id}>
-                <span
-                  className={
-                    task.is_completed
-                      ? "task-title completed-title"
-                      : "task-title"
-                  }
-                >
-                  {task.title}
-                </span>
-
-                {task.is_completed ? (
-                  <span className="done">Completed</span>
-                ) : (
-                  <button
-                    className="complete-btn"
-                    onClick={() => markAsComplete(task.id)}
-                  >
-                    Mark Complete
-                  </button>
-                )}
-              </div>
-            ))
-          )}
-        </div>
+        {/* Task list removed — you can add your new component here later */}
       </div>
     </div>
   );
