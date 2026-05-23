@@ -20,7 +20,11 @@ function App() {
       }
 
       const data = await response.json();
-      setTasks(data);
+
+      // ✅ Only keep Assignment 1 initially
+      const filtered = data.filter((task) => task.title === "Assignment 1");
+      setTasks(filtered);
+
       setError("");
     } catch (error) {
       console.error(error);
@@ -53,7 +57,7 @@ function App() {
       }
 
       const newTask = await response.json();
-      setTasks([newTask, ...tasks]);
+      setTasks([newTask, ...tasks]); // ✅ Add new task to list
       setTitle("");
       setError("");
     } catch (error) {
@@ -78,6 +82,7 @@ function App() {
       }
 
       const updatedTask = await response.json();
+      // ✅ Keep completed tasks visible
       setTasks(tasks.map((task) => (task.id === taskId ? updatedTask : task)));
       setError("");
     } catch (error) {
@@ -85,24 +90,6 @@ function App() {
       setError("Task was not updated. Please check the Django API.");
     }
   };
-
-  // ✅ Delete all tasks at once
-  const deleteAllTasks = async () => {
-    try {
-      // Loop through tasks and delete each one
-      for (const task of tasks) {
-        await fetch(`${API_URL}${task.id}/`, { method: "DELETE" });
-      }
-      setTasks([]); // Clear state
-      setError("");
-    } catch (error) {
-      console.error(error);
-      setError("Tasks were not deleted. Please check the Django API.");
-    }
-  };
-
-  const pendingCount = tasks.filter((task) => !task.is_completed).length;
-  const completedCount = tasks.filter((task) => task.is_completed).length;
 
   useEffect(() => {
     fetchTasks();
@@ -117,21 +104,6 @@ function App() {
         <p className="subtitle">
           Add, view, and complete tasks using a Django API and React frontend.
         </p>
-
-        <div className="summary">
-          <div>
-            <strong>{tasks.length}</strong>
-            <span>Total Tasks</span>
-          </div>
-          <div>
-            <strong>{pendingCount}</strong>
-            <span>Pending</span>
-          </div>
-          <div>
-            <strong>{completedCount}</strong>
-            <span>Completed</span>
-          </div>
-        </div>
 
         <form onSubmit={addTask} className="task-form">
           <input
@@ -177,17 +149,9 @@ function App() {
             ))
           )}
         </div>
-
-        {/* ✅ Delete button at the bottom */}
-        {tasks.length > 0 && (
-          <button className="delete-btn" onClick={deleteAllTasks}>
-            Delete All Tasks
-          </button>
-        )}
       </div>
     </div>
   );
 }
 
 export default App;
-
