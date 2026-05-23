@@ -86,6 +86,27 @@ function App() {
     }
   };
 
+  // ✅ New delete function
+  const deleteTask = async (taskId) => {
+    try {
+      const response = await fetch(`${API_URL}${taskId}/`, {
+        method: "DELETE",
+      });
+
+      if (!response.ok) {
+        const errorText = await response.text();
+        throw new Error(errorText);
+      }
+
+      // Remove task from state
+      setTasks(tasks.filter((task) => task.id !== taskId));
+      setError("");
+    } catch (error) {
+      console.error(error);
+      setError("Task was not deleted. Please check the Django API.");
+    }
+  };
+
   const pendingCount = tasks.filter((task) => !task.is_completed).length;
   const completedCount = tasks.filter((task) => task.is_completed).length;
 
@@ -139,7 +160,7 @@ function App() {
             <p className="empty">No tasks yet. Add your first task above.</p>
           ) : (
             tasks
-              .filter((task) => !task.is_completed) // ✅ only show pending tasks in history
+              .filter((task) => !task.is_completed) // show only pending tasks
               .map((task) => (
                 <div className="task-item" key={task.id}>
                   <span className="task-title">{task.title}</span>
@@ -148,6 +169,12 @@ function App() {
                     onClick={() => markAsComplete(task.id)}
                   >
                     Mark Complete
+                  </button>
+                  <button
+                    className="delete-btn"
+                    onClick={() => deleteTask(task.id)}
+                  >
+                    Delete
                   </button>
                 </div>
               ))
