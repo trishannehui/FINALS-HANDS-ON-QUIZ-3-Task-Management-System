@@ -1,15 +1,19 @@
 import { useEffect, useState } from "react";
 import "./App.css";
 
-const API_URL = "https://kinerz707.pythonanywhere.com/api/tasks/";
+const API_URL = "https://trishannehui.pythonanywhere.com/api/tasks/";
 
 function App() {
   const [tasks, setTasks] = useState([]);
   const [title, setTitle] = useState("");
   const [error, setError] = useState("");
+  const [isAdding, setIsAdding] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
 
   const fetchTasks = async () => {
     try {
+      setIsLoading(true);
+
       const response = await fetch(API_URL);
 
       if (!response.ok) {
@@ -21,26 +25,32 @@ function App() {
       setError("");
     } catch (error) {
       console.error(error);
-      setError("Cannot connect to Django API. Make sure backend is running.");
+      setError("Cannot connect to the Django API. Please check the backend link.");
+    } finally {
+      setIsLoading(false);
     }
   };
 
   const addTask = async (e) => {
     e.preventDefault();
 
-    if (title.trim() === "") {
+    const taskTitle = title.trim();
+
+    if (taskTitle === "") {
       alert("Please enter a task title.");
       return;
     }
 
     try {
+      setIsAdding(true);
+
       const response = await fetch(API_URL, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
         },
         body: JSON.stringify({
-          title: title.trim(),
+          title: taskTitle,
           is_completed: false,
         }),
       });
@@ -57,7 +67,9 @@ function App() {
       setError("");
     } catch (error) {
       console.error(error);
-      setError("Task was not added. Check your Django API and CORS settings.");
+      setError("Task was not added. Please check the Django API and CORS settings.");
+    } finally {
+      setIsAdding(false);
     }
   };
 
@@ -89,9 +101,12 @@ function App() {
       setError("");
     } catch (error) {
       console.error(error);
-      setError("Task was not updated. Check your Django API.");
+      setError("Task was not updated. Please check the Django API.");
     }
   };
+
+  const pendingCount = tasks.filter((task) => !task.is_completed).length;
+  const completedCount = tasks.filter((task) => task.is_completed).length;
 
   useEffect(() => {
     fetchTasks();
@@ -100,27 +115,48 @@ function App() {
   return (
     <div className="page">
       <div className="card">
+        <div className="badge">Django REST Framework + ReactJS</div>
+
         <h1>Task Management System</h1>
         <p className="subtitle">
-          Simple task tracker using Django REST Framework and ReactJS
+          Add, view, and complete tasks using a Django API and React frontend.
         </p>
+
+        <div className="summary">
+          <div>
+            <strong>{tasks.length}</strong>
+            <span>Total Tasks</span>
+          </div>
+          <div>
+            <strong>{pendingCount}</strong>
+            <span>Pending</span>
+          </div>
+          <div>
+            <strong>{completedCount}</strong>
+            <span>Completed</span>
+          </div>
+        </div>
 
         <form onSubmit={addTask} className="task-form">
           <input
             type="text"
-            placeholder="Enter new task..."
+            placeholder="Type a new task..."
             value={title}
             onChange={(e) => setTitle(e.target.value)}
           />
 
-          <button type="submit">Add Task</button>
+          <button type="submit" disabled={isAdding}>
+            {isAdding ? "Adding..." : "Add Task"}
+          </button>
         </form>
 
         {error && <p className="error-message">{error}</p>}
 
         <div className="task-list">
-          {tasks.length === 0 ? (
-            <p className="empty">No tasks yet.</p>
+          {isLoading ? (
+            <p className="empty">Loading tasks...</p>
+          ) : tasks.length === 0 ? (
+            <p className="empty">No tasks yet. Add your first task above.</p>
           ) : (
             tasks.map((task) => (
               <div className="task-item" key={task.id}>

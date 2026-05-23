@@ -26,11 +26,16 @@ SECRET_KEY = 'django-insecure-thw5s2d1&r$!bwci=&-ok3-smx^pit@9g&_47%7a=oln4zmjj$
 DEBUG = True
 
 ALLOWED_HOSTS = [
-    'kinerz707.pythonanywhere.com',
-    'Kinerz707.pythonanywhere.com',
+    'trishannehui.pythonanywhere.com',
     '127.0.0.1',
     'localhost',
 ]
+
+CSRF_TRUSTED_ORIGINS = [
+    'https://trishannehui.pythonanywhere.com',
+]
+
+CORS_ALLOW_ALL_ORIGINS = True
 
 
 INSTALLED_APPS = [
@@ -58,10 +63,6 @@ MIDDLEWARE = [
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
 
-CSRF_TRUSTED_ORIGINS = [
-    'https://kinerz707.pythonanywhere.com',
-    'https://Kinerz707.pythonanywhere.com',
-]
 
 CORS_ALLOW_ALL_ORIGINS = True
 
