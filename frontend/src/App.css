@@ -8,12 +8,13 @@ body {
   min-height: 100vh;
   background:
     radial-gradient(circle at top left, rgba(244, 114, 182, 0.35), transparent 32%),
-    radial-gradient(circle at bottom right, rgba(219, 39, 119, 0.20), transparent 30%),
+    radial-gradient(circle at bottom right, rgba(219, 39, 119, 0.2), transparent 30%),
     linear-gradient(135deg, #fff1f2, #fdf2f8, #fce7f3);
 }
 
 .page {
   min-height: 100vh;
+  width: 100%;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -26,7 +27,7 @@ body {
   background: rgba(255, 255, 255, 0.94);
   padding: 40px;
   border-radius: 28px;
-  box-shadow: 0 24px 60px rgba(190, 24, 93, 0.20);
+  box-shadow: 0 24px 60px rgba(190, 24, 93, 0.2);
   border: 1px solid rgba(251, 207, 232, 0.95);
 }
 

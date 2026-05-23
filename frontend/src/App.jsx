@@ -118,6 +118,7 @@ function App() {
         <div className="badge">Django REST Framework + ReactJS</div>
 
         <h1>Task Management System</h1>
+
         <p className="subtitle">
           Add, view, and complete tasks using a Django API and React frontend.
         </p>
@@ -127,10 +128,12 @@ function App() {
             <strong>{tasks.length}</strong>
             <span>Total Tasks</span>
           </div>
+
           <div>
             <strong>{pendingCount}</strong>
             <span>Pending</span>
           </div>
+
           <div>
             <strong>{completedCount}</strong>
             <span>Completed</span>
